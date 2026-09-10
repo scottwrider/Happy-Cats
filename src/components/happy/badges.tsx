@@ -30,7 +30,7 @@ const statusStyles: Record<FlavourStatus, string> = {
   review: "bg-manual-soft text-manual border-manual/30",
 };
 
-export function StatusBadge({ status, reason }: { status: FlavourStatus; reason?: string }) {
+export function StatusBadge({ status, reason }: { status: FlavourStatus; reason?: string | undefined }) {
   return (
     <span
       title={reason}
