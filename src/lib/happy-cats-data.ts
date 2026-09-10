@@ -377,4 +377,4 @@ export const ALL_FLAVOURS = BRANDS.flatMap((b) =>
 export const findFlavour = (id: string) => ALL_FLAVOURS.find((f) => f.id === id);
 
 export const bestListing = (f: Flavour) =>
-  [...f.listings].sort((a, b) => a.unitPrice - b.unitPrice)[0];
+  [...f.listings].sort((a, b) => a.unitPrice - b.unitPrice)[0]!;

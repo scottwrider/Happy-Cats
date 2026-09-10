@@ -17,7 +17,7 @@ export function Dashboard({ favourites, stock, onStockChange }: Props) {
   const approved = ALL_FLAVOURS.filter((f) => f.status === "approved");
   const cheapest = approved
     .map((f) => ({ f, l: bestListing(f) }))
-    .sort((a, b) => a.l.unitPrice - b.l.unitPrice)[0];
+    .sort((a, b) => a.l.unitPrice - b.l.unitPrice)[0]!;
   const lastChecked = ALL_FLAVOURS.flatMap((f) => f.listings)
     .map((l) => l.lastChecked)
     .sort()
