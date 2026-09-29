@@ -58,42 +58,42 @@
 :root {
   --radius: 0.75rem;
   --background: oklch(0.977 0.012 84);
-  --foreground: oklch(0.245 0.014 62);
+  --foreground: oklch(0.23 0.02 60);
   --card: oklch(0.995 0.006 90);
-  --card-foreground: oklch(0.245 0.014 62);
+  --card-foreground: oklch(0.23 0.02 60);
   --popover: oklch(0.995 0.006 90);
-  --popover-foreground: oklch(0.245 0.014 62);
-  --primary: oklch(0.545 0.129 39);
+  --popover-foreground: oklch(0.23 0.02 60);
+  --primary: oklch(0.42 0.11 38);
   --primary-foreground: oklch(0.985 0.008 84);
   --secondary: oklch(0.925 0.024 82);
-  --secondary-foreground: oklch(0.3 0.02 62);
+  --secondary-foreground: oklch(0.28 0.02 62);
   --muted: oklch(0.938 0.017 84);
-  --muted-foreground: oklch(0.47 0.02 68);
+  --muted-foreground: oklch(0.36 0.02 62);
   --accent: oklch(0.912 0.033 78);
   --accent-foreground: oklch(0.3 0.02 62);
-  --destructive: oklch(0.55 0.2 27);
+  --destructive: oklch(0.42 0.14 25);
   --destructive-foreground: oklch(0.985 0.008 84);
   --border: oklch(0.888 0.021 82);
   --input: oklch(0.888 0.021 82);
-  --ring: oklch(0.545 0.129 39);
+  --ring: oklch(0.23 0.02 60);
   --sand: oklch(0.928 0.028 80);
-  --verified: oklch(0.45 0.09 170);
+  --verified: oklch(0.34 0.065 170);
   --verified-foreground: oklch(0.985 0.008 170);
-  --verified-soft: oklch(0.93 0.035 170);
-  --manual: oklch(0.52 0.11 70);
+  --verified-soft: oklch(0.94 0.028 170);
+  --manual: oklch(0.38 0.085 58);
   --manual-foreground: oklch(0.99 0.01 84);
-  --manual-soft: oklch(0.94 0.045 82);
-  --receipt: oklch(0.45 0.012 70);
+  --manual-soft: oklch(0.95 0.04 85);
+  --receipt: oklch(0.34 0.012 70);
   --receipt-foreground: oklch(0.985 0.008 84);
-  --receipt-soft: oklch(0.925 0.008 80);
+  --receipt-soft: oklch(0.93 0.008 85);
   --sidebar: oklch(0.96 0.016 84);
-  --sidebar-foreground: oklch(0.245 0.014 62);
-  --sidebar-primary: oklch(0.545 0.129 39);
+  --sidebar-foreground: oklch(0.23 0.02 60);
+  --sidebar-primary: oklch(0.42 0.11 38);
   --sidebar-primary-foreground: oklch(0.985 0.008 84);
   --sidebar-accent: oklch(0.912 0.033 78);
   --sidebar-accent-foreground: oklch(0.3 0.02 62);
   --sidebar-border: oklch(0.888 0.021 82);
-  --sidebar-ring: oklch(0.545 0.129 39);
+  --sidebar-ring: oklch(0.23 0.02 60);
 }
 
 @layer base {
@@ -101,11 +101,25 @@
     border-color: var(--color-border);
   }
 
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
   }
 
   h1,
@@ -115,8 +129,12 @@
     letter-spacing: -0.01em;
   }
 
+  :focus {
+    outline: none;
+  }
+
   :focus-visible {
-    outline: 2px solid var(--color-ring);
+    outline: 3px solid var(--color-ring);
     outline-offset: 2px;
   }
 }
@@ -131,6 +149,178 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-soft);
+}
+
+/* The shopping menu is a horizontal row above a full-width panel. */
+.shop-column {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 72rem;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.shop-nav,
+.shop-panel {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.shop-nav ul {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-card);
+}
+
+.shop-nav button {
+  min-height: 2.75rem;
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.75rem;
+  color: var(--color-foreground);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.shop-nav button:hover {
+  background: var(--color-muted);
+}
+
+.shop-nav button.is-current {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  max-width: 100%;
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--color-primary) 88%, black);
+}
+
+.btn-quiet {
+  border: 1px solid var(--color-border);
+  background: var(--color-secondary);
+  color: var(--color-secondary-foreground);
+}
+
+.btn-quiet:hover:not(:disabled) {
+  background: var(--color-accent);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.badge-verified,
+.badge-approved {
+  border-color: var(--color-verified);
+  background: var(--color-verified-soft);
+  color: var(--color-verified);
+}
+
+.badge-manual,
+.badge-review {
+  border-color: var(--color-manual);
+  background: var(--color-manual-soft);
+  color: var(--color-manual);
+}
+
+.badge-receipt {
+  border-color: var(--color-receipt);
+  background: var(--color-receipt-soft);
+  color: var(--color-receipt);
+}
+
+.badge-excluded {
+  border-color: var(--color-destructive);
+  background: oklch(0.95 0.02 25);
+  color: var(--color-destructive);
+}
+
+.price-row {
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.price-row[data-trust="verified"] {
+  border-color: var(--color-verified);
+  background: var(--color-verified-soft);
+  box-shadow: inset 4px 0 0 var(--color-verified);
+}
+
+.price-row[data-trust="manual"] {
+  border-color: var(--color-manual);
+  background: var(--color-manual-soft);
+  box-shadow: inset 4px 0 0 var(--color-manual);
+}
+
+.price-row[data-trust="receipt"] {
+  border-color: var(--color-receipt);
+  background: var(--color-receipt-soft);
+  box-shadow: inset 4px 0 0 var(--color-receipt);
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -4rem;
+  z-index: 20;
+  border-radius: 0.5rem;
+  background: var(--color-card);
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
