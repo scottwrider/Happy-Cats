@@ -39,3 +39,29 @@ bun test scripts/happy-cats.test.ts
 ```
 
 The Lovable project is [dec05c7a-6feb-4dcd-8f97-bd99137b067a](https://lovable.dev/projects/dec05c7a-6feb-4dcd-8f97-bd99137b067a). Pushes to the connected branch sync back to the Lovable editor.
+
+## Deploy to Fly.io
+
+The production image builds the TanStack Start app with Bun and serves the Nitro Node server on port 8080 (`HOST=0.0.0.0`). `fly.toml` names the app `happy-cats`, places it in Madrid (`mad`), uses a `shared-cpu-1x` machine with 512 MB, and allows scale to zero. Fly checks `GET /`.
+
+The app reads no secrets at runtime. `HOST`, `PORT`, and `NODE_ENV` are set in the image and in `fly.toml`.
+
+Create the Fly app once, from a machine where `flyctl` is logged in:
+
+```sh
+fly auth login
+fly apps create happy-cats
+```
+
+Deploy tokens belong in GitHub, not in the repo. Create one and store it as the `FLY_API_TOKEN` Actions secret:
+
+```sh
+fly tokens create deploy -a happy-cats
+gh secret set FLY_API_TOKEN
+```
+
+Pushes to `main` run `.github/workflows/fly-deploy.yml`, which deploys with `flyctl deploy --remote-only`. A first deploy from your own machine, before that workflow has run, is:
+
+```sh
+fly deploy
+```
