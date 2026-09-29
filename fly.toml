@@ -5,6 +5,7 @@ app = "happy-cats"
 primary_region = "mad"
 
 [build]
+  dockerfile = "Dockerfile"
 
 [env]
   HOST = "0.0.0.0"
