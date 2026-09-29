@@ -1,45 +1,26 @@
-import type { FlavourStatus, TrustLevel } from "@/lib/happy-cats-data";
-import { STATUS_LABEL, TRUST_LABEL } from "@/lib/happy-cats-data";
-
-const trustStyles: Record<TrustLevel, string> = {
-  verified: "bg-verified-soft text-verified border-verified/30",
-  manual: "bg-manual-soft text-manual border-manual/30",
-  receipt: "bg-receipt-soft text-receipt border-receipt/25",
-};
-
-const trustDot: Record<TrustLevel, string> = {
-  verified: "bg-verified",
-  manual: "bg-manual",
-  receipt: "bg-receipt",
-};
+import type { ProductStatus, TrustLevel } from "@/lib/catalogue";
+import { STATUS_LABEL, TRUST_LABEL } from "@/lib/catalogue";
 
 export function TrustBadge({ trust }: { trust: TrustLevel }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${trustStyles[trust]}`}
-    >
-      <span className={`size-1.5 rounded-full ${trustDot[trust]}`} aria-hidden="true" />
+    <span className={`badge badge-${trust}`}>
+      <span className="badge-dot" aria-hidden="true" />
       {TRUST_LABEL[trust]}
     </span>
   );
 }
 
-const statusStyles: Record<FlavourStatus, string> = {
-  approved: "bg-verified-soft text-verified border-verified/30",
-  excluded: "bg-destructive/10 text-destructive border-destructive/30",
-  review: "bg-manual-soft text-manual border-manual/30",
-};
-
-export function StatusBadge({ status, reason }: { status: FlavourStatus; reason?: string | undefined }) {
+export function StatusBadge({ status, reason }: { status: ProductStatus; reason: string | null }) {
   return (
-    <span
-      title={reason}
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${statusStyles[status]}`}
-    >
+    <span className={`badge badge-${status}`} title={reason ?? undefined}>
       {STATUS_LABEL[status]}
       {reason ? <span className="sr-only">: {reason}</span> : null}
     </span>
   );
+}
+
+export function HistoricalBadge() {
+  return <span className="badge badge-receipt">Historical</span>;
 }
 
 export function Heart({ filled }: { filled: boolean }) {

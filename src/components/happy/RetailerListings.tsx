@@ -1,62 +1,103 @@
-import type { Flavour } from "@/lib/happy-cats-data";
-import { euro, formatDate } from "@/lib/happy-cats-data";
+import { euro, formatDate, type Listing, type Product } from "@/lib/catalogue";
 import { TrustBadge } from "./badges";
 
 type Props = {
-  flavour: Flavour;
-  onAdd: (flavourId: string, retailer: string) => void;
+  product: Product;
+  unitNoun: string;
+  listings: Listing[];
+  onAdd: (listingId: string) => void;
+  onRemoveEntered: (listingId: string) => void;
 };
 
-export function RetailerListings({ flavour, onAdd }: Props) {
-  const sorted = [...flavour.listings].sort((a, b) => a.unitPrice - b.unitPrice);
+export function RetailerListings({ product, unitNoun, listings, onAdd, onRemoveEntered }: Props) {
+  const sorted = [...listings].sort(
+    (a, b) => a.unitPrice - b.unitPrice || a.retailerName.localeCompare(b.retailerName),
+  );
+  const lowestId = sorted[0]?.id;
+
+  if (sorted.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        No price recorded for {product.name}. Write one below if you have it. Nothing is looked up
+        for you.
+      </p>
+    );
+  }
 
   return (
-    <div className="rounded-lg border border-border bg-background/60 p-4">
-      <h4 className="text-sm font-semibold">
-        Where to buy {flavour.name}{" "}
-        <span className="font-normal text-muted-foreground">({flavour.grams} g pouches)</span>
+    <div className="min-w-0">
+      <h4 className="text-base font-semibold">
+        Where {product.name} is recorded{" "}
+        <span className="font-normal text-muted-foreground">
+          ({product.amount} {product.measure} {product.form})
+        </span>
       </h4>
       <ul className="mt-3 space-y-2">
-        {sorted.map((l, i) => (
-          <li
-            key={l.retailer + l.packSize}
-            className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-md border border-border bg-card px-3 py-3"
-          >
-            <div className="min-w-0">
-              <p className="flex flex-wrap items-center gap-2 font-semibold">
-                {l.retailer}
-                <TrustBadge trust={l.trust} />
-                {i === 0 && (
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                    Cheapest
-                  </span>
-                )}
-              </p>
-              <p className="num mt-0.5 text-sm text-muted-foreground">
-                {l.packSize} · last checked {formatDate(l.lastChecked)}
-                {l.note ? ` · ${l.note}` : ""}
-              </p>
+        {sorted.map((listing) => (
+          <li key={listing.id} className="price-row min-w-0" data-trust={listing.trust}>
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <p className="font-semibold">{listing.retailerName}</p>
+              <TrustBadge trust={listing.trust} />
+              {listing.id === lowestId ? (
+                <span className="rounded-full bg-card px-2 py-0.5 text-xs font-semibold">
+                  Lowest unit price
+                </span>
+              ) : null}
+              {listing.origin === "entered" ? (
+                <span className="text-xs font-semibold text-muted-foreground">Entered by you</span>
+              ) : null}
             </div>
-            <div className="flex items-center gap-3">
-              <p className="num text-right">
-                <span className="text-lg font-semibold">{euro(l.unitPrice)}</span>
-                <span className="block text-xs text-muted-foreground">per pouch</span>
-              </p>
+            <dl className="mt-3 grid min-w-0 gap-3 sm:grid-cols-3">
+              <div className="min-w-0">
+                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Unit price
+                </dt>
+                <dd className="num text-xl font-semibold">{euro(listing.unitPrice)}</dd>
+                <dd className="text-xs text-muted-foreground">per {unitNoun}</dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Pack size
+                </dt>
+                <dd className="num text-base font-semibold">{listing.packLabel}</dd>
+                {listing.unitsPerPack > 1 ? (
+                  <dd className="num text-xs text-muted-foreground">
+                    Pack total {euro(listing.packTotal)}
+                  </dd>
+                ) : null}
+              </div>
+              <div className="min-w-0">
+                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Last checked
+                </dt>
+                <dd className="num text-base font-semibold">{formatDate(listing.observedOn)}</dd>
+              </div>
+            </dl>
+            {listing.note ? (
+              <p className="mt-2 break-words text-sm text-muted-foreground">{listing.note}</p>
+            ) : null}
+            <div className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => onAdd(flavour.id, l.retailer)}
-                className="rounded-md border border-input bg-secondary px-3 py-1.5 text-sm font-semibold text-secondary-foreground transition-colors hover:bg-accent"
+                className="btn btn-quiet"
+                onClick={() => onAdd(listing.id)}
+                disabled={product.status === "excluded"}
               >
-                Add to basket
+                {product.status === "excluded" ? "Excluded from the basket" : "Add to basket"}
               </button>
+              {listing.origin === "entered" ? (
+                <button
+                  type="button"
+                  className="btn btn-quiet"
+                  onClick={() => onRemoveEntered(listing.id)}
+                >
+                  Remove this price
+                </button>
+              ) : null}
             </div>
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-xs text-muted-foreground">
-        Prices are never written automatically — verified entries were confirmed by hand on the
-        retailer page.
-      </p>
     </div>
   );
 }
