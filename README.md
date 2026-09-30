@@ -40,10 +40,8 @@ bun test scripts/happy-cats.test.ts
 
 The Lovable project is [dec05c7a-6feb-4dcd-8f97-bd99137b067a](https://lovable.dev/projects/dec05c7a-6feb-4dcd-8f97-bd99137b067a). Pushes to the connected branch sync back to the Lovable editor.
 
-## Deploy to Fly.io
+## Deploy to Vercel
 
-`Dockerfile`, `.dockerignore`, and `fly.toml` are in the repository root so Fly’s launch-from-GitHub flow can find them. The image builds the TanStack Start app with Bun and serves the Nitro Node server on port 8080 (`HOST=0.0.0.0`). `fly.toml` names the app `happy-cats`, places it in Madrid (`mad`), uses a `shared-cpu-1x` machine with 512 MB, allows scale to zero, and checks `GET /`.
+Vercel is the deploy target. The Nitro preset in `vite.config.ts` is `vercel`, so `bun run build` writes the Build Output API to `.vercel/output`. Vercel uses that directory when `config.json` is present. The app reads no secrets at runtime.
 
-The app reads no secrets at runtime. `HOST`, `PORT`, and `NODE_ENV` are set in the image and in `fly.toml`.
-
-In the Fly dashboard, launch the app from this GitHub repository. Fly builds the root `Dockerfile` and applies the root `fly.toml`.
+`Dockerfile`, `.dockerignore`, and `fly.toml` are still in the repository root from the earlier Fly.io setup (app `happy-cats`, region `mad`, Node server on port 8080). The preset was `node-server` for that image, if we go back.
